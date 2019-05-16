@@ -36,4 +36,4 @@ app.post('/insertComentario', db.insertComentario);
 
 app.listen(port, '192.168.1.144',function () {
     
-})
+});
