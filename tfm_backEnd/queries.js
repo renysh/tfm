@@ -80,7 +80,9 @@ const getUserByName = function (request, response) {
 const insertComentario = function (request, response) {
 
     try {
-        const { nombre, calificacion, comentario } = request.body;
+        const nombre = request.body.nombre;
+        const calificacion = request.body.calificacion;
+        const comentario = request.body.comentario;
 
         pool.query('INSERT INTO comentarios (nombre, calificacion, comentario) VALUES ($1, $2, $3)', [nombre, calificacion, comentario], function(error, results) {
             if (error) {
