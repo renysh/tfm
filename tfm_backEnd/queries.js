@@ -122,9 +122,9 @@ const getComentarios = function (request, response) {
 
 
 module.exports = {
-    getUsers,
-    getUserById,
-    getUserByName,
-    getComentarios,
-    insertComentario
+    getUsers: getUsers,
+    getUserById: getUserById,
+    getUserByName: getUserByName,
+    getComentarios: getComentarios,
+    insertComentario: insertComentario
 }
