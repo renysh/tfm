@@ -12,7 +12,7 @@ app.use(
     })
 );
 
-app.use((req, res, next) => {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (request, response) => {
+app.get('/', function (request, response) {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 });
 
@@ -34,6 +34,6 @@ app.post('/userByName', db.getUserByName);
 app.get('/comentarios', db.getComentarios);
 app.post('/insertComentario', db.insertComentario);
 
-app.listen(port, '192.168.1.144',() => {
+app.listen(port, '192.168.1.144',function () {
     console.log(`App running on port ${port}.`)
 })

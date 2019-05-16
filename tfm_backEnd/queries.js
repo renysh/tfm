@@ -8,10 +8,10 @@ const pool = new Pool({
     port: 5432,
 })
 
-const getUsers = (request, response) => {
+const getUsers = function (request, response) {
 
     try {
-        pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
+        pool.query('SELECT * FROM users ORDER BY id ASC', function(error, results) {
             if (error) {
                 const _response = {
                     error,
@@ -27,7 +27,7 @@ const getUsers = (request, response) => {
     }
 }
 
-const getUserById = (request, response) => {
+const getUserById = function (request, response) {
     //const id = parseIt(request.params.id)
 
     try {
@@ -35,7 +35,7 @@ const getUserById = (request, response) => {
 
         console.log(qryStr);
 
-        pool.query(qryStr, (error, results) => {
+        pool.query(qryStr, function(error, results) {
             if (error) {
                 const _response = {
                     error,
@@ -55,12 +55,12 @@ const getUserById = (request, response) => {
 
 }
 
-const getUserByName = (request, response) => {
+const getUserByName = function (request, response) {
 
     try {
         var qryStr = "SELECT id, name, email FROM users WHERE name ='" + request.body.name + "'";
         console.log(qryStr);
-        pool.query(qryStr, (error, results) => {
+        pool.query(qryStr, function(error, results) {
             if (error) {
                 const _response = {
                     error,
@@ -77,12 +77,12 @@ const getUserByName = (request, response) => {
     }
 }
 
-const insertComentario = (request, response) => {
+const insertComentario = function (request, response) {
 
     try {
         const { nombre, calificacion, comentario } = request.body;
 
-        pool.query('INSERT INTO comentarios (nombre, calificacion, comentario) VALUES ($1, $2, $3)', [nombre, calificacion, comentario], (error, results) => {
+        pool.query('INSERT INTO comentarios (nombre, calificacion, comentario) VALUES ($1, $2, $3)', [nombre, calificacion, comentario], function(error, results) {
             if (error) {
                 const _response = {
                     error,
@@ -99,10 +99,10 @@ const insertComentario = (request, response) => {
 }
 
 
-const getComentarios = (request, response) => {
+const getComentarios = function (request, response) {
 
     try {
-        pool.query('SELECT * FROM comentarios ORDER BY id ASC', (error, results) => {
+        pool.query('SELECT * FROM comentarios ORDER BY id ASC', function(error, results) {
             if (error) {
                 const _response = {
                     error,
