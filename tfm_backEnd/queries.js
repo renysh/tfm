@@ -38,7 +38,7 @@ const getUserById = function (request, response) {
         pool.query(qryStr, function(error, results) {
             if (error) {
                 const _response = {
-                    error,
+                    error: error,
                     message: error.message
                 };
                 console.log(_response);
@@ -63,7 +63,7 @@ const getUserByName = function (request, response) {
         pool.query(qryStr, function(error, results) {
             if (error) {
                 const _response = {
-                    error,
+                    error: error,
                     message: error.message
                 };
                 response.send(_response);
@@ -85,7 +85,7 @@ const insertComentario = function (request, response) {
         pool.query('INSERT INTO comentarios (nombre, calificacion, comentario) VALUES ($1, $2, $3)', [nombre, calificacion, comentario], function(error, results) {
             if (error) {
                 const _response = {
-                    error,
+                    error: error,
                     message: error.message
                 };
                 response.send(_response);
@@ -105,7 +105,7 @@ const getComentarios = function (request, response) {
         pool.query('SELECT * FROM comentarios ORDER BY id ASC', function(error, results) {
             if (error) {
                 const _response = {
-                    error,
+                    error: error,
                     message: error.message
                 };
                 response.send(_response);

@@ -35,5 +35,5 @@ app.get('/comentarios', db.getComentarios);
 app.post('/insertComentario', db.insertComentario);
 
 app.listen(port, '192.168.1.144',function () {
-    console.log(`App on port ${port}.`)
+    console.log(`Corriendo en el puerto ${port}.`)
 })
