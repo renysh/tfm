@@ -92,7 +92,7 @@ const insertComentario = function (request, response) {
                 };
                 response.send(_response);
             } else {
-                response.status(201).send(`Comentario guardado exitosamente`);
+                response.status(201).send('Comentario guardado exitosamente');
             }
         });
     } catch (err) {
