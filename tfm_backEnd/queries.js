@@ -14,7 +14,7 @@ const getUsers = function (request, response) {
         pool.query('SELECT * FROM users ORDER BY id ASC', function(error, results) {
             if (error) {
                 const _response = {
-                    error,
+                    error: error,
                     message: error.message
                 };
                 response.send(_response);
