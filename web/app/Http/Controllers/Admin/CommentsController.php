@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Role;
 use App\User;
 use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CommentsController extends Controller
@@ -22,9 +23,6 @@ class CommentsController extends Controller
         $content =$body->getContents();
         $comments = json_decode($content);
 
-        Log::info($comments);
-
-        $users = User::all();
 
         return view('admin.comments.index', compact('comments'));
     }
@@ -38,14 +36,27 @@ class CommentsController extends Controller
         return view('admin.users.create', compact('roles'));
     }
 
-    public function store(StoreUserRequest $request)
+    public function store(Request $request)
     {
-        abort_unless(\Gate::allows('user_create'), 403);
 
-        $user = User::create($request->all());
-        $user->roles()->sync($request->input('roles', []));
+        $input = $request->all();
 
-        return redirect()->route('admin.users.index');
+        $client = new Client(['base_uri' => 'http://localhost:3000/']);
+        $response = $client->request('POST', 'insertComentario', [
+            'json' => [
+                'nombre' => $input['nombre'],
+                'calificacion' => $input['calificacion'],
+                'comentario' => $input['comentario']
+            ]]);
+        $body = $response->getBody();
+        $content = $body->getContents();
+        Log::info($content);
+        //$users = json_decode($content);
+        //Log::info($users);
+
+        //return response()->json(['success' => $users]);
+
+        return redirect()->route('admin.comments.index');
     }
 
     public function edit(User $user)
