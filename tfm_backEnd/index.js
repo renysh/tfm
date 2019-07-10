@@ -34,6 +34,10 @@ app.post('/userByName', db.getUserByName);
 app.get('/comentarios', db.getComentarios);
 app.post('/insertComentario', db.insertComentario);
 
-app.listen(port, '192.168.1.144',function () {
+app.get('/users/datospago/:userId', db.getDatosPago);
+app.post('/login', db.login);
+
+
+app.listen(port, 'localhost',function () {
     
 });
