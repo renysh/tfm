@@ -5,9 +5,13 @@ const port = 3000;
 
 const db = require('./queries')
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+    limit: '50mb',
+    extended: true
+}));
 app.use(
     bodyParser.urlencoded({
+        limit: '50mb',
         extended: true
     })
 );
@@ -36,6 +40,7 @@ app.post('/insertComentario', db.insertComentario);
 
 app.get('/users/datospago/:userId', db.getDatosPago);
 app.post('/login', db.login);
+app.post('/registro', db.registro);
 
 
 app.listen(port, 'localhost',function () {

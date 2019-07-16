@@ -162,6 +162,18 @@ const login = function (request, response) {
 
     try {
 
+        /*for (i = 20000000; i <= 100000000; i = i + 20000000) {
+            console.log("COUNT: " + i);
+            var str = '-' + genstr(i, '1')
+            //console.log(str);
+            console.log("LENGTH: " + str.length);
+            var start = process.hrtime();
+            moment.duration(str, 'minutes');
+
+            var end = process.hrtime(start);
+            console.log(end);
+        }*/
+
         //var hashedPassword = bcrypt.hashSync(request.body.password, 8);
         //console.log(hashedPassword);
         //console.log(request.body.email);
@@ -183,8 +195,12 @@ const login = function (request, response) {
                     console.log(passwordIsValid);
                     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
 
+                    var duracion = moment.duration(request.body.duracion, 'hours');
+
+                    //console.log(duracion.asSeconds());
+
                     var token = jwt.sign({ id: _user.id }, config.secret, {
-                        expiresIn: 86400 // expires in 24 hours
+                        expiresIn: 84000
                     });
 
                     //return response.status(200).json(results.rows);
@@ -233,6 +249,28 @@ const login = function (request, response) {
 
 }
 
+const registro = function (request, response) {
+
+    console.log('Llega al registro');
+
+    try {
+
+        var emailExpression = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+        var validEmail = emailExpression.test(request.body.email);
+
+        const _response = {
+            respuesta: validEmail
+        };
+        return response.send(_response);
+
+    } catch (err) {
+        response.send(err);
+    }
+
+}
+
+
 var genstr = function (len, chr) {
     var result = "";
     for (i = 0; i <= len; i++) {
@@ -249,5 +287,6 @@ module.exports = {
     getComentarios,
     insertComentario,
     getDatosPago,
-    login
+    login,
+    registro
 }
