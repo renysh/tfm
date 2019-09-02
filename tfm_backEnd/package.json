@@ -1,19 +1,19 @@
 {
-  "name": "Servicios Rest Inseguros",
-  "version": "1.0.0",
-  "description": "Desarrollo de servicios Web Inseguros para autoaprendizaje",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "René Stalin Ortega Pesantes",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "express": "^4.16.4",
-    "jsonwebtoken": "^8.5.1",
-    "moment": "^2.19.2",
-    "pg": "^7.11.0"
-  }
+    "name": "REST",
+    "version": "1.0.0",
+    "description": "Desarrollo de servicios Web Inseguros para autoaprendizaje",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "René Stalin Ortega Pesantes",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "express": "^4.16.4",
+        "jsonwebtoken": "^8.5.1",
+        "moment": "^2.19.2",
+        "pg": "^7.11.0"
+    }
 }

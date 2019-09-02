@@ -16,7 +16,7 @@ app.use(
     })
 );
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
@@ -27,22 +27,21 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/', function (request, response) {
+app.get('/', function(request, response) {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 });
 
 
-app.get('/users', db.getUsers);
-app.get('/users/:id', db.getUserById);
-app.post('/userByName', db.getUserByName);
-app.get('/comentarios', db.getComentarios);
-app.post('/insertComentario', db.insertComentario);
+app.get('/rest/usuario', db.getUsers);
+app.get('/rest/usuario/:id', db.usuarioPorId);
+app.post('/rest/usuario/userByName', db.getUserByName);
+app.get('/rest/comentarios', db.getComentarios);
+app.post('/rest/insertComentario', db.insertComentario);
 
-app.get('/users/datospago/:userId', db.getDatosPago);
-app.post('/login', db.login);
-app.post('/registro', db.registro);
+app.get('/rest/usuario/datospago/:userId', db.getDatosPago);
+app.post('/rest/login', db.login);
+app.post('/rest/registro', db.registro);
 
+app.listen(port, 'localhost', function() {
 
-app.listen(port, 'localhost',function () {
-    
 });
