@@ -39,8 +39,6 @@ const usuarioPorId = function(request, response) {
         // 1. Creación de la consulta a ejecutar en la base de datos
         var qryStr = "SELECT id, nombre, email FROM usuario WHERE id =" + request.params.id;
 
-        console.log(qryStr);
-
         // 2. Ejecución de consulta
         pool.query(qryStr, function(error, results) {
             // 3. Verificación de resultado de consulta, si hay error se devuelve el error y el mensaje
@@ -102,76 +100,110 @@ const getUserByName = function(request, response) {
 }
 
 const insertarComentario = function(request, response) {
-
     try {
-        const nombre = request.body.nombre;
-        const calificacion = request.body.calificacion;
+        // 1. Obtención de parametros recibidos
+        const usuario_id = request.body.usuario_id;
         const comentario = request.body.comentario;
+        const fecha = new Date().toLocaleString('es-EC', {
+            timeZone: 'America/Guayaquil'
+        });
 
-        pool.query('INSERT INTO comentarios (nombre, calificacion, comentario) VALUES ($1, $2, $3)', [nombre, calificacion, comentario], function(error, results) {
+        // 2. Creación de la sentencia a ejecutarse en la base de datos
+        pool.query('INSERT INTO comentarios (usuario_id, comentario, fecha) VALUES ($1, $2, $3)', [usuario_id, comentario, fecha], function(error, results) {
+            // 3. Verificación de resultado de inserción, si hay error se devuelve el error y el mensaje
             if (error) {
                 const _response = {
+                    status: false,
                     error: error,
-                    message: error.message
+                    mensaje: error.message
                 };
                 response.send(_response);
             } else {
-                response.status(201).send('Comentario guardado exitosamente');
+                // 4. Si no hay  error se devuelve mensaje informativo de guardado exitoso
+                response.status(200).json({
+                    status: true,
+                    mensaje: "Comentario guardado exitosamente"
+                });
             }
         });
     } catch (err) {
-        response.send(err);
+        // 5. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
     }
 }
 
 
-const getComentarios = function(request, response) {
+const obtenerTodosComentarios = function(request, response) {
 
     try {
         pool.query('SELECT * FROM comentarios ORDER BY id ASC', function(error, results) {
             if (error) {
                 const _response = {
+                    status: false,
                     error: error,
-                    message: error.message
+                    mensaje: error.message
                 };
                 response.send(_response);
             } else {
-                response.status(200).json(results.rows)
+                // 5. Si hay resultados se devuelve la información correspondiente
+                response.status(200).json({
+                    status: true,
+                    comentarios: results.rows
+                });
             }
         });
     } catch (err) {
-        response.send(err);
+        // 5. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
     }
 }
 
 
-const getDatosPago = function(request, response) {
+const obtenerDatosPago = function(request, response) {
 
     try {
-        pool.query('SELECT tipo, proveedor, numero ' +
-            'FROM datospago where user_id = $1', [request.params.userId],
+        // 1. Creación de la consulta a ejecutar en la base de datos
+        var qryStr = 'SELECT tipo, proveedor, numero ' +
+            'FROM datospago where user_id = $1';
+
+        // 2. Ejecución de consulta
+        pool.query(qryStr, [request.params.usuario_id],
             function(error, results) {
+                // 3. Verificación de resultado de consulta, si hay error
+                //    se devuelve el error y el mensaje
                 if (error) {
                     const _response = {
+                        status: false,
                         error: error,
-                        message: error.message
+                        mensaje: error.message
                     };
                     response.send(_response);
                 } else {
-                    /*var r = /([a-z]+)+$/
-                    var s = 'aaaaaaaaaaaaaa!'
-    
-                    console.log('Running regular expression... please wait')
-                    console.time('benchmark')
-    
-                    r.test(s)
-    
-                    console.timeEnd('benchmark')*/
-                    response.status(200).json(results.rows)
+                    // 4. Se devuelve la información correspondiente
+                    response.status(200).json({
+                        status: true,
+                        comentarios: results.rows
+                    });
                 }
             });
     } catch (err) {
-        response.send(err);
+        // 5. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
     }
 }
 
@@ -180,6 +212,10 @@ const login = function(request, response) {
     console.log('Llega al login');
 
     try {
+
+        const fecha_inicio_login = new Date().toLocaleString('es-EC', {
+            timeZone: 'America/Guayaquil'
+        });
 
         /*for (i = 20000000; i <= 100000000; i = i + 20000000) {
             console.log("COUNT: " + i);
@@ -197,7 +233,7 @@ const login = function(request, response) {
         //console.log(hashedPassword);
         //console.log(request.body.email);
 
-        pool.query('SELECT * FROM users WHERE email = $1', [request.body.email], function(error, results) {
+        pool.query('SELECT * FROM usuario WHERE email = $1', [request.body.email], function(error, results) {
 
             if (error) {
                 const _response = {
@@ -211,22 +247,23 @@ const login = function(request, response) {
                     //Si hay el usuario en la BD
                     var _user = results.rows[0];
                     var passwordIsValid = bcrypt.compareSync(request.body.password, _user.password);
-                    console.log(passwordIsValid);
-                    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+                    if (!passwordIsValid) return res.status(401).send({ autenticado: false, token: null });
+
+                    console.log(moment().format('[Inicia] h:mm:ss SSS'));
 
                     var duracion = moment.duration(request.body.duracion, 'hours');
 
-                    //console.log(duracion.asSeconds());
+                    console.log(moment().format('[finaliza] h:mm:ss SSS'));
 
                     var token = jwt.sign({ id: _user.id }, config.secret, {
-                        expiresIn: 84000
+                        expiresIn: duracion.asSeconds()
                     });
 
                     //return response.status(200).json(results.rows);
-                    response.status(200).send({ auth: true, token: token });
+                    response.status(200).send({ autenticado: true, token: token });
                 } else {
                     const _response = {
-                        auth: false,
+                        autenticado: false,
                         message: 'Login incorrecto'
                     };
                     return response.send(_response);
@@ -303,9 +340,9 @@ module.exports = {
     usuarios,
     usuarioPorId,
     getUserByName,
-    getComentarios,
+    obtenerTodosComentarios,
     insertarComentario,
-    getDatosPago,
+    obtenerDatosPago,
     login,
     registro
 }

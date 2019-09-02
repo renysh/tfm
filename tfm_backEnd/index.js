@@ -35,11 +35,11 @@ app.get('/', function(request, response) {
 app.get('/rest/usuarios', db.usuarios);
 app.get('/rest/usuario/:id', db.usuarioPorId);
 app.post('/rest/usuario/userByName', db.getUserByName);
-app.get('/rest/comentarios', db.getComentarios);
+app.get('/rest/obtenerTodosComentarios', db.obtenerTodosComentarios);
 app.post('/rest/insertarComentario', db.insertarComentario);
 
-app.get('/rest/usuario/datospago/:userId', db.getDatosPago);
-app.post('/rest/login', db.login);
+app.get('/rest/usuario/obtenerDatosPago/:usuario_id', db.obtenerDatosPago);
+app.post('/rest/usuario/login', db.login);
 app.post('/rest/registro', db.registro);
 
 app.listen(port, 'localhost', function() {
