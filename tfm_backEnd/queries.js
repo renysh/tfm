@@ -14,7 +14,7 @@ const pool = new Pool({
 })
 
 
-const getUsers = function(request, response) {
+const usuarios = function(request, response) {
 
     try {
         pool.query('SELECT * FROM users ORDER BY id ASC', function(error, results) {
@@ -35,8 +35,11 @@ const getUsers = function(request, response) {
 
 const usuarioPorId = function(request, response) {
     try {
+
         // 1. Creación de la consulta a ejecutar en la base de datos
         var qryStr = "SELECT id, nombre, email FROM usuario WHERE id =" + request.params.id;
+
+        console.log(qryStr);
 
         // 2. Ejecución de consulta
         pool.query(qryStr, function(error, results) {
@@ -98,7 +101,7 @@ const getUserByName = function(request, response) {
     }
 }
 
-const insertComentario = function(request, response) {
+const insertarComentario = function(request, response) {
 
     try {
         const nombre = request.body.nombre;
@@ -297,11 +300,11 @@ var genstr = function(len, chr) {
 }
 
 module.exports = {
-    getUsers,
+    usuarios,
     usuarioPorId,
     getUserByName,
     getComentarios,
-    insertComentario,
+    insertarComentario,
     getDatosPago,
     login,
     registro

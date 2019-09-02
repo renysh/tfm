@@ -28,15 +28,15 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(request, response) {
-    response.json({ info: 'Node.js, Express, and Postgres API' })
+    response.json({ info: 'Servicios Web Rest Vulnerables' })
 });
 
 
-app.get('/rest/usuario', db.getUsers);
+app.get('/rest/usuarios', db.usuarios);
 app.get('/rest/usuario/:id', db.usuarioPorId);
 app.post('/rest/usuario/userByName', db.getUserByName);
 app.get('/rest/comentarios', db.getComentarios);
-app.post('/rest/insertComentario', db.insertComentario);
+app.post('/rest/insertarComentario', db.insertarComentario);
 
 app.get('/rest/usuario/datospago/:userId', db.getDatosPago);
 app.post('/rest/login', db.login);
