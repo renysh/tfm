@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
+const address = "192.168.1.2";
 
 const db = require('./queries')
 
@@ -40,8 +41,8 @@ app.post('/rest/insertarComentario', db.insertarComentario);
 
 app.get('/rest/usuario/obtenerDatosPago/:usuario_id', db.obtenerDatosPago);
 app.post('/rest/usuario/login', db.login);
-app.post('/rest/registro', db.registro);
+app.post('/rest/usuario/registro', db.registro);
 
-app.listen(port, 'localhost', function() {
-
+app.listen(port, address, function() {
+    console.log('Servicios Web Rest Iniciados en la dirección:'+address);
 });

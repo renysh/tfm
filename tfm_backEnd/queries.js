@@ -139,6 +139,7 @@ const insertarComentario = function(request, response) {
 
 
 const obtenerTodosComentarios = function(request, response) {
+    console.log('LLega a obtener comentarios de IP:'+ request.connection.remoteAddress);
 
     try {
         pool.query('SELECT * FROM comentarios ORDER BY id ASC', function(error, results) {
@@ -315,15 +316,44 @@ const registro = function(request, response) {
 
         var validEmail = emailExpression.test(request.body.email);
 
-        const _response = {
-            respuesta: validEmail
-        };
-        return response.send(_response);
+        if(validEmail) {
+            var passwordHasheado = bcrypt.hashSync(request.body.password, 8);
+            
+            pool.query('INSERT INTO usuario(nombre, email, password) VALUES ($1, $2, $3)', 
+                        [request.body.nombre, request.body.email, passwordHasheado], function(error, result) {
+                if (error) {
+                    const _response = {
+                        status: false,
+                        error: error,
+                        mensaje: error.message
+                    };
+                    response.send(_response);
+                } else {
+                    console.log(result);
+                    response.status(200).json({
+                        status: true,
+                        mensaje: "Usuario creado exitosamente"
+                    });
+                }
+
+            });
+            
+        }else {
+            response.status(200).json({
+                status: false,
+                mensaje: "Email inválido"
+            });         
+        }
 
     } catch (err) {
-        response.send(err);
+        // 5. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
     }
-
 }
 
 
