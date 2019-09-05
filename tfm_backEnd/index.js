@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const address = "192.168.1.2";
+const address = "localhost";
 
 const db = require('./queries')
 
@@ -31,7 +31,6 @@ app.use(function(req, res, next) {
 app.get('/', function(request, response) {
     response.json({ info: 'Servicios Web Rest Vulnerables' })
 });
-
 
 app.get('/rest/usuarios', db.usuarios);
 app.get('/rest/usuario/:id', db.usuarioPorId);

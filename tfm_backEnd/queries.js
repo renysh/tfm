@@ -210,98 +210,78 @@ const obtenerDatosPago = function(request, response) {
 
 const login = function(request, response) {
 
-    console.log('Llega al login');
-
     try {
 
-        const fecha_inicio_login = new Date().toLocaleString('es-EC', {
-            timeZone: 'America/Guayaquil'
-        });
+         // 1. Creación de la consulta a ejecutar en la base de datos
+         // se consulta si existe usuario con email proporcionado
+         var qryStr = 'SELECT * FROM usuario WHERE email = $1';
 
-        /*for (i = 20000000; i <= 100000000; i = i + 20000000) {
-            console.log("COUNT: " + i);
-            var str = '-' + genstr(i, '1')
-            //console.log(str);
-            console.log("LENGTH: " + str.length);
-            var start = process.hrtime();
-            moment.duration(str, 'minutes');
-
-            var end = process.hrtime(start);
-            console.log(end);
-        }*/
-
-        //var hashedPassword = bcrypt.hashSync(request.body.password, 8);
-        //console.log(hashedPassword);
-        //console.log(request.body.email);
-
-        pool.query('SELECT * FROM usuario WHERE email = $1', [request.body.email], function(error, results) {
-
+         // 2. Ejecución de consulta
+        pool.query(qryStr, [request.body.email], function(error, results) {
+             // 3. Verificación de resultado de consulta, si hay error
+             //    se devuelve el error y el mensaje
             if (error) {
                 const _response = {
-                    auth: false,
+                    autenticado: false,
                     error: error,
-                    message: error.message
+                    mensaje: error.message
                 };
                 return response.send(_response);
             } else {
+                // 4. Comprobar si existe usuario con email proporcionado
                 if (results.rowCount > 0) {
-                    //Si hay el usuario en la BD
+                    // 5. Si hay el usuario en la BD validamos password proporcionado con password almacenado
                     var _user = results.rows[0];
                     var passwordIsValid = bcrypt.compareSync(request.body.password, _user.password);
-                    if (!passwordIsValid) return res.status(401).send({ autenticado: false, token: null });
+                    // 6. Si no coinciden passwords retorna información de autenticación errónea
+                    if (!passwordIsValid) {
+                        return res.status(401).send(
+                            { autenticado: false, mensaje:'Credenciales incorrectas' }
+                        );
+                    }
 
-                    console.log(moment().format('[Inicia] h:mm:ss SSS'));
+                    // 7. Si validación de email y password es correcta
+                    // se calcula duración de token en base a parametro proporcionado en horas
+                    // *** para efetos didacticos de imprime duracion de cálculo de duración y tamaño de 
+                    // caracteres de parámetro duración
+                    console.log('Numero caracteres duracion:'+request.body.duracion.length);
+                    var start = process.hrtime();
+                    var duracion = moment.duration(request.body.duracion, 'minutes');
+                    var end = process.hrtime(start);
 
-                    var duracion = moment.duration(request.body.duracion, 'hours');
+                    console.info('Tiempo ejecución (hr): %ds %dms', end[0], end[1] / 1000000);
 
-                    console.log(moment().format('[finaliza] h:mm:ss SSS'));
-
+                    // 8. Se genera token correspondiente a autenticación exitosa con secreto
+                    // tomado de configuración
                     var token = jwt.sign({ id: _user.id }, config.secret, {
                         expiresIn: duracion.asSeconds()
                     });
-
-                    //return response.status(200).json(results.rows);
-                    response.status(200).send({ autenticado: true, token: token });
+                    // 9. Se devuelve información de autenticación exitosa
+                    response.status(200).send({ 
+                        autenticado: true, 
+                        token: token, 
+                        mensaje:'Autenticación exitosa'}
+                    );
                 } else {
+                    // 10. Si no existe usuario con email proporcionado, retorna 
+                    //  información de autenticación errónea
                     const _response = {
                         autenticado: false,
-                        message: 'Login incorrecto'
+                        mensaje: 'Login incorrecto'
                     };
                     return response.send(_response);
                 }
-                //var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-
-                /*var r = /([a-z]+)+$/
-                var s = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!'
-
-                console.log('Running regular expression... please wait')
-                console.time('benchmark')
-
-                r.test(s)
-
-                console.timeEnd('benchmark')*/
             }
         });
 
-        /*console.log('antes de calcular el duration');
-        var _retorno = moment.duration(100);
-        console.log('luego de calcular el duration');
-
-        for (i = 20000000; i <= 100000000; i = i + 20000000) {
-            console.log("COUNT: " + i);
-            var str = '-' + genstr(i, '1')
-            //console.log(str);
-            console.log("LENGTH: " + str.length);
-            var start = process.hrtime();
-            moment.duration(str)
-
-            var end = process.hrtime(start);
-            console.log(end);
-        }
-
-        response.send(_retorno);*/
     } catch (err) {
-        response.send(err);
+        // 11. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
     }
 
 }
