@@ -10,7 +10,7 @@ const pool = new Pool({
     host: config.hostBD,
     database: config.databaseName,
     password: config.passwordBD,
-    port: config.postBDNumber,
+    port: config.portBDNumber,
 })
 
 

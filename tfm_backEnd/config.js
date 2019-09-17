@@ -4,5 +4,7 @@ module.exports = {
     'hostBD': 'localhost',
     'databaseName': 'tfm',
     'passwordBD': 'root',
-    'postBDNumber': 5432
+    'portBDNumber': 5432,
+    'port' : 3000,
+    'host' : 'localhost'
 }
