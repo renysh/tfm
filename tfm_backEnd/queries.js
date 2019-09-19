@@ -169,6 +169,44 @@ const obtenerTodosComentarios = function(request, response) {
     }
 }
 
+const insertarDatosPago = function(request, response) {
+    try {
+        // 1. Obtención de parametros recibidos
+        const usuario_id = request.body.usuario_id;
+        const tipoCuenta = request.body.tipo_cuenta;
+        const proveedor = request.body.proveedor;
+        const numero = request.body.proveedor;
+
+        // 2. Creación de la sentencia a ejecutarse en la base de datos
+        pool.query('INSERT INTO datospago (usuario_id, tipo,proveedor, numero) VALUES ($1, $2, $3, $4)', 
+        [usuario_id, tipoCuenta, proveedor, numero], function(error, results) {
+            // 3. Verificación de resultado de inserción, si hay error se devuelve el error y el mensaje
+            if (error) {
+                const _response = {
+                    status: false,
+                    error: error,
+                    mensaje: error.message
+                };
+                response.send(_response);
+            } else {
+                // 4. Si no hay  error se devuelve mensaje informativo de guardado exitoso
+                response.status(200).json({
+                    status: true,
+                    mensaje: "Datos de pago guardados exitosamente"
+                });
+            }
+        });
+    } catch (err) {
+        // 5. En caso de error se devuelve error y mensaje
+        const _response = {
+            status: false,
+            error: err,
+            mensaje: "Error en el servicio"
+        };
+        response.send(_response);
+    }
+}
+
 
 const obtenerDatosPago = function(request, response) {
 
@@ -354,5 +392,6 @@ module.exports = {
     insertarComentario,
     obtenerDatosPago,
     login,
-    registro
+    registro,
+    insertarDatosPago
 }

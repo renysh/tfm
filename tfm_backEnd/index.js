@@ -40,6 +40,7 @@ app.post('/rest/insertarComentario', db.insertarComentario);
 app.get('/rest/usuario/obtenerDatosPago/:usuario_id', db.obtenerDatosPago);
 app.post('/rest/usuario/login', db.login);
 app.post('/rest/usuario/registro', db.registro);
+app.post('/rest/usuario/insertarDatosPago', db.insertarDatosPago);
 
 app.listen(config.port, config.host, function() {
     console.log('Servicios Web Rest Iniciados en la dirección:'+config.host);
